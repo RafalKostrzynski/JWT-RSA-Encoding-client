@@ -58,7 +58,7 @@ public class BootApiClient {
     }
 
     private String generateJwt(boolean isAdmin) throws Exception {
-        Algorithm algorithm = Algorithm.RSA256((RSAPublicKey) getPublicKey(), (RSAPrivateKey) getPrivateKey());
+        Algorithm algorithm = Algorithm.RSA256(null, (RSAPrivateKey) getPrivateKey());
         return JWT.create().withClaim("admin", isAdmin).sign(algorithm);
     }
 
@@ -68,13 +68,5 @@ public class BootApiClient {
         PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         return keyFactory.generatePrivate(spec);
-    }
-
-    PublicKey getPublicKey() throws Exception {
-        Resource resource = new ClassPathResource("public_key.der");
-        byte[] keyBytes = Files.readAllBytes(resource.getFile().toPath());
-        X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
-        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-        return keyFactory.generatePublic(spec);
     }
 }
